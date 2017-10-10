@@ -11,7 +11,7 @@
 	<div>
 			<h1>Temperatura</h1>
 			<input type="text" id="ciudad" name="ciudad" 
-			class="form-control" placeholder="Introduce poblaci髇" autofocus required>
+			class="form-control" placeholder="Introduce poblaci贸n" autofocus required>
 			<button type="button" class="btn btn-default" ng-click="verTiempo()">Ver el tiempo</button>
 	</div>
 	<div>
@@ -19,7 +19,7 @@
 		<h4>Ciudad: {{temp.location.name}} ({{temp.location.region}})</h4>
 		<h4>{{temp.location.country}}</h4>
 		<img ng-src="{{geo.current.condition.icon}}">
-		<h5>{{temp.current.temp_c}} 篊</h5>
+		<h5>{{temp.current.temp_c}} 潞C</h5>
 		<h5>{{temp.current.condition.text}}
 		</h5>
 	</div>
@@ -27,37 +27,18 @@
 	<!-- AngularJS -->
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
 
-	<!-- AngularJS Locale (para Espa駉l) -->
+	<!-- AngularJS Locale (para Espa帽ol) -->
 	<script type="text/javascript"
 		src="resources/scripts/angular-locale.min.js"></script>
 
 	<script type="text/javascript">
 		// Creacion del modulo principal de la aplicacion
 		/*
-		*	Servicio $scope => creacion del modelo (datos) para
-		*	utilizar en la vista asociada al controlador
-		*	
-		*	Servicio $log => para depuraci髇 por consola del
-		*	navegador. Equivalente a console.log
-		*
-		*	Servicio $http => para realizar peticiones asincronas
-		*	a recursos (URL's) internas o externas. Por debajo va
-		*	el objeto XMLHttpRequest
-		*
-		*	Se configura con un objeto donde indicamos el m閠odo
-		*	de envio (porpiedad method) y la URL (propiedad url)
-		*
-		*	Tiene un callback asociado al evento success que se
-		*	ejecuta cuando recibimos respuesta OK desde el
-		*	servidor.
-		*
-		*	Tiene un callback asociado al evento error que se
-		*	ejecuta cuando hay error en la respuesta desde el
-		*	servidor.
+		* Usamos la API de Apixu
 		*/
 		var servicios = angular.module("appTemperatura", []);
 		
-		// Creaci髇 del controlador principal
+		// Creaci贸n del controlador principal
 		var controlador = servicios.controller("appController",
 				["$scope", "$log", "$http", 
 					function($scope, $log, $http) {
@@ -71,7 +52,7 @@
 						url = "http://api.apixu.com/v1/current.json?key=" + apiKey + "&q=" + ciudad				
 						
 						/*
-						*	Petici髇 GET as韓crona para cargar los
+						*	Petici贸n GET as铆ncrona para cargar los
 						*	datos de la API de Apixu
 						*/
 						$http({
@@ -82,7 +63,7 @@
 							
 						}).error(function(datos, status, headers, config) {
 							
-							alert("Error: Poblaci髇 no existente, vu閘ve a intentarlo.");
+							alert("Error: Poblaci贸n no existente, vu茅lve a intentarlo.");
 						});
 						
 						$log.debug("Creado scope del controlador");
