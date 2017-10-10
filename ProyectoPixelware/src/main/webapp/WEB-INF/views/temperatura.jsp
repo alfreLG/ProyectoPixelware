@@ -3,31 +3,39 @@
 <html ng-app="appTemperatura">
 <head>
 	<title>Proyecto Piwelware</title>
-	<link rel="stylesheet" type="text/css" href="../../resources/styles/boostrap.min.css">
-	<link rel="stylesheet" type="text/css" href="../../resources/styles/boostrap-theme.min.css">
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<style type="text/css">
+	/*
+		Por defecto la capa estará oculta.Hasta que no se introduce una ciudad correcta,
+		no se mostrará.
+	*/
+		#datosTemperatura{
+			display:none;
+		}
+	</style>
 </head>
 <body ng-controller="appController">
 <form>
-	<div>
-			<h1>Temperatura</h1>
-			<input type="text" id="ciudad" name="ciudad" 
-			class="form-control" placeholder="Introduce poblaciÃ³n" autofocus required>
-			<button type="button" class="btn btn-default" ng-click="verTiempo()">Ver el tiempo</button>
-	</div>
-	<div>
-	
-		<h4>Ciudad: {{temp.location.name}} ({{temp.location.region}})</h4>
-		<h4>{{temp.location.country}}</h4>
-		<img ng-src="{{geo.current.condition.icon}}">
-		<h5>{{temp.current.temp_c}} ÂºC</h5>
-		<h5>{{temp.current.condition.text}}
-		</h5>
+	<h1>Temperatura</h1>	
+	<form>
+		<input type="text" id="ciudad" name="ciudad" 
+		class="form-control" placeholder="Introduce población" autofocus>
+		<button type="button" class="btn btn-default" ng-click="verTiempo()">Ver el tiempo</button>
+	</form>	
+
+	<div class="row" id="datosTemperatura" ng-style="mostrarTiempo">
+		<div class="text-center">
+			<h4>Estás viendo el tiempo en {{temp.location.name}} ({{temp.location.region}}) {{temp.location.country | uppercase}}</h4>	
+				<img ng-src="{{temp.current.condition.icon}}"/>
+				<h3>{{temp.current.temp_c}} ºC</h3>
+				<h5>{{temp.current.condition.text}}</h5>
+		</div>
 	</div>
 </form>
 	<!-- AngularJS -->
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
 
-	<!-- AngularJS Locale (para EspaÃ±ol) -->
+	<!-- AngularJS Locale (para Espanol) -->
 	<script type="text/javascript"
 		src="resources/scripts/angular-locale.min.js"></script>
 
@@ -38,7 +46,7 @@
 		*/
 		var servicios = angular.module("appTemperatura", []);
 		
-		// CreaciÃ³n del controlador principal
+		// Creacion del controlador principal
 		var controlador = servicios.controller("appController",
 				["$scope", "$log", "$http", 
 					function($scope, $log, $http) {
@@ -49,10 +57,10 @@
 					
 						var apiKey = "584dba877b3f417198b105657170610";
 						var ciudad = document.getElementById("ciudad").value;
-						url = "http://api.apixu.com/v1/current.json?key=" + apiKey + "&q=" + ciudad				
+						var url = "http://api.apixu.com/v1/current.json?key=" + apiKey + "&q=" + ciudad				
 						
 						/*
-						*	PeticiÃ³n GET asÃ­ncrona para cargar los
+						*	Peticion GET asincrona para cargar los
 						*	datos de la API de Apixu
 						*/
 						$http({
@@ -61,9 +69,34 @@
 						}).success(function(datos, status, headers, config) {
 							$scope.temp = datos;
 							
+							/*
+							Vamos a poner en castellano el tiempo actual, mediante un switch, 
+							he modificado 2 tipos de condición metereológica. 
+								Sunny -> Soleado
+								Partly cloudy -> Parcialmente nublado	
+							*/
+							switch($scope.temp.current.condition.text){
+							
+							case "Sunny":
+								$scope.temp.current.condition.text = "Soleado";
+								break;
+
+							case "Partly cloudy":
+								$scope.temp.current.condition.text = "Parcialmente nublado";
+								break;
+								
+							default:
+								$scope.temp.current.condition.text
+							}
+
+							
+							$scope.mostrarTiempo={
+								    "display" : "block"
+							}
+							
 						}).error(function(datos, status, headers, config) {
 							
-							alert("Error: PoblaciÃ³n no existente, vuÃ©lve a intentarlo.");
+							alert("Error: Poblacion no existente, vuelve a intentarlo.");
 						});
 						
 						$log.debug("Creado scope del controlador");
