@@ -89,10 +89,21 @@
 								$scope.temp.current.condition.text
 							}
 
+							// Al comprobar que ha introducido una población correcta, se habilita
+							// la capa.
 							
 							$scope.mostrarTiempo={
 								    "display" : "block"
 							}
+							
+							// retocar
+							var data = {
+									"ciudad" : temp.location.name,
+									"region" : temp.location.region,
+									"pais" : temp.location.country,
+									"temperatura" : temp.current.temp_c
+							}
+							$http.post("temperatura", data)
 							
 						}).error(function(datos, status, headers, config) {
 							
