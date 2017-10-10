@@ -18,7 +18,7 @@
 	
 		<h4>Ciudad: {{temp.location.name}} ({{temp.location.region}})</h4>
 		<h4>{{temp.location.country}}</h4>
-		<img src="{{geo.current.condition.icon}}">
+		<img ng-src="{{geo.current.condition.icon}}">
 		<h5>{{temp.current.temp_c}} ºC</h5>
 		<h5>{{temp.current.condition.text}}
 		</h5>
