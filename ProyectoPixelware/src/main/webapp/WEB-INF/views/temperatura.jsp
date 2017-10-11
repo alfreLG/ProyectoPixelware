@@ -12,32 +12,59 @@
 		#datosTemperatura{
 			display:none;
 		}
+
 	</style>
 </head>
 <body ng-controller="appController">
-<form>
-	<h1>Temperatura</h1>	
-	<form>
-		<input type="text" id="ciudad" name="ciudad" 
-		class="form-control" placeholder="Introduce población" autofocus>
-		<button type="button" class="btn btn-default" ng-click="verTiempo()">Ver el tiempo</button>
-	</form>	
-
+<div class="container">
+	<div class="row">
+		<div class="col-sm-offset-4 col-sm-4 col-sm-offset-4 text-center" style="margin-top:15%;">
+		<h1><i class="glyphicon glyphicon-cloud"></i> El tiempo</h1>
+		<form class="form-inline">
+			<div class="input-group">	
+				<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+				<input type="text" id="ciudad" name="ciudad" 
+				class="form-control" placeholder="Introduce población" autofocus>
+			</div>
+			<button type="button" class="btn btn-success" ng-click="verTiempo()">Ver el tiempo</button>
+		</div>
+	</div>
 	<div class="row" id="datosTemperatura" ng-style="mostrarTiempo">
-		<div class="text-center">
+		<div class="col-lg-6 text-center">
 			<h4>Estás viendo el tiempo en {{temp.location.name}} ({{temp.location.region}}) {{temp.location.country | uppercase}}</h4>	
 				<img ng-src="{{temp.current.condition.icon}}"/>
 				<h3>{{temp.current.temp_c}} ºC</h3>
-				<h5>{{temp.current.condition.text}}</h5>
+				<h4>{{temp.current.condition.text}}</h4>
+		</div>
+	
+
+		<div class="col-lg-6 text-center">
+			<table class="table">
+			<thead>
+				<caption>Historial 10 últimas consultas</caption>
+				<tr>
+					<th>Ciudad</th>
+					<th>Región</th>
+					<th>País</th>
+					<th>Temperatura</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="historial table-striped" ng-repeat="histTiempo in historial | orderBy:'-id':reverse | limitTo:10">
+					<td>{{histTiempo.ciudad}}</td>
+					<td>{{histTiempo.region}}</td>
+					<td>{{histTiempo.pais}}</td>
+					<td>{{histTiempo.temperatura}}</td>
+				</tr>
+			</tbody>
+			</table>
 		</div>
 	</div>
-</form>
+</div>
+<!--   https://www.mkyong.com/spring/maven-spring-jdbc-example/ -->
 	<!-- AngularJS -->
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
 
-	<!-- AngularJS Locale (para Espanol) -->
-	<script type="text/javascript"
-		src="resources/scripts/angular-locale.min.js"></script>
 
 	<script type="text/javascript">
 		// Creacion del modulo principal de la aplicacion
@@ -52,12 +79,14 @@
 					function($scope, $log, $http) {
 					
 					$scope.temp = {};
+					$scope.historial = [];
+					$scope.id=0;
 					
 					$scope.verTiempo = function(ciudad) {
 					
 						var apiKey = "584dba877b3f417198b105657170610";
 						var ciudad = document.getElementById("ciudad").value;
-						var url = "http://api.apixu.com/v1/current.json?key=" + apiKey + "&q=" + ciudad				
+						var url = "http://api.apixu.com/v1/current.json?key=" + apiKey + "&q=" + ciudad	+ "&lang=es"			
 						
 						/*
 						*	Peticion GET asincrona para cargar los
@@ -75,19 +104,7 @@
 								Sunny -> Soleado
 								Partly cloudy -> Parcialmente nublado	
 							*/
-							switch($scope.temp.current.condition.text){
-							
-							case "Sunny":
-								$scope.temp.current.condition.text = "Soleado";
-								break;
 
-							case "Partly cloudy":
-								$scope.temp.current.condition.text = "Parcialmente nublado";
-								break;
-								
-							default:
-								$scope.temp.current.condition.text
-							}
 
 							// Al comprobar que ha introducido una población correcta, se habilita
 							// la capa.
@@ -96,14 +113,24 @@
 								    "display" : "block"
 							}
 							
-							// retocar
-							var data = {
-									"ciudad" : temp.location.name,
-									"region" : temp.location.region,
-									"pais" : temp.location.country,
-									"temperatura" : temp.current.temp_c
+							/*
+							Vamos a crear un historial no persistente para mostrar el historial
+							del usuario.
+							*/
+									
+							$scope.id++;
+							
+							var anadirHistorial = {
+										
+									id : $scope.id,
+									ciudad : $scope.temp.location.name,
+									region : $scope.temp.location.region,
+									pais : $scope.temp.location.country,
+									temperatura : $scope.temp.current.temp_c + " ºC"
 							}
-							$http.post("temperatura", data)
+							
+							$scope.historial.push(anadirHistorial);
+							
 							
 						}).error(function(datos, status, headers, config) {
 							

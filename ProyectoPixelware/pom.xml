@@ -117,13 +117,25 @@
 			<scope>test</scope>
 		</dependency> 
 
-		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
-	<dependency>
-		<groupId>org.codehaus.jackson</groupId>
-		<artifactId>jackson-mapper-asl</artifactId>
-		<version>1.9.13</version>
-	</dependency>
-       
+		<!-- 
+		DEPENDENCIA JACKSON
+		https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core 		
+		-->
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.9.13</version>
+		</dependency>
+		
+		 <!-- 
+		 DEPENDENCIA JDBC
+		 https://mvnrepository.com/artifact/org.springframework/spring-jdbc 
+		 -->
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-jdbc</artifactId>
+		    <version>4.3.9.RELEASE</version>
+		</dependency>      
 	</dependencies>
     <build>
         <plugins>
